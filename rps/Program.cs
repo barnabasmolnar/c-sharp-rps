@@ -8,6 +8,22 @@ namespace rps
 {
     class Program
     {
+        static string DetermineWinner(string userChoice, string cpuChoice)
+        {
+            if (userChoice == cpuChoice)
+            {
+                return "Draw.";
+            }
+
+            if (userChoice == "ROCK" && cpuChoice == "SCISSOR" || userChoice == "PAPER" && cpuChoice == "ROCK" || userChoice == "SCISSOR" && cpuChoice == "PAPER")
+            {
+                return "You win this round.";
+            }
+
+            return "CPU wins this round.";
+
+        }
+
         static void Main()
         {
             bool keepPlaying = true;
@@ -37,39 +53,16 @@ namespace rps
                 string cpuChoice = choices[n];
                 Console.WriteLine("CPU:" + cpuChoice);
 
-                if (userChoice == "ROCK" && cpuChoice == "PAPER")
+                string winner = DetermineWinner(userChoice, cpuChoice);
+                Console.WriteLine(winner);
+
+                if (winner == "You win this round.")
                 {
-                    Console.WriteLine("CPU wins this round.");
-                    cpuScore++;
-                }
-                else if (userChoice == "ROCK" && cpuChoice == "SCISSOR")
-                {
-                    Console.WriteLine("You win this round.");
                     userScore++;
                 }
-                else if (userChoice == "PAPER" && cpuChoice == "ROCK")
+                else if (winner == "CPU wins this round.")
                 {
-                    Console.WriteLine("You win this round.");
-                    userScore++;
-                }
-                else if (userChoice == "PAPER" && cpuChoice == "SCISSOR")
-                {
-                    Console.WriteLine("CPU wins this round.");
                     cpuScore++;
-                }
-                else if (userChoice == "SCISSOR" && cpuChoice == "ROCK")
-                {
-                    Console.WriteLine("CPU wins this round.");
-                    cpuScore++;
-                }
-                else if (userChoice == "SCISSOR" && cpuChoice == "PAPER")
-                {
-                    Console.WriteLine("You win this round.");
-                    userScore++;
-                }
-                else
-                {
-                    Console.WriteLine("Draw.");
                 }
 
                 Console.Write("New game? y/n ");
