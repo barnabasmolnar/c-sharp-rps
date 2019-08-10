@@ -6,16 +6,18 @@ using System.Threading.Tasks;
 
 namespace rps
 {
+    enum Choice { ROCK, PAPER, SCISSORS };
+
     class Program
     {
-        static string DetermineWinner(string userChoice, string cpuChoice)
+        static string DetermineWinner(Choice userChoice, Choice cpuChoice)
         {
             if (userChoice == cpuChoice)
             {
                 return "Draw.";
             }
 
-            if (userChoice == "ROCK" && cpuChoice == "SCISSOR" || userChoice == "PAPER" && cpuChoice == "ROCK" || userChoice == "SCISSOR" && cpuChoice == "PAPER")
+            if (userChoice == Choice.ROCK && cpuChoice == Choice.SCISSORS || userChoice == Choice.PAPER && cpuChoice == Choice.ROCK || userChoice == Choice.SCISSORS && cpuChoice == Choice.PAPER)
             {
                 return "You win this round.";
             }
@@ -31,26 +33,29 @@ namespace rps
             int userScore = 0;
             int cpuScore = 0;
 
-            string[] choices = { "ROCK", "PAPER", "SCISSOR" };
+            var choices = Enum.GetValues(typeof(Choice));
 
             Console.WriteLine("Let's play a game of Rock Paper Scissors.");
 
             Random rnd = new Random();
 
+
             while (keepPlaying)
             {
+
                 int n = rnd.Next(choices.Length);
 
 
-                string userChoice;
+                Choice userChoice;
+                string userChoiceStr;
 
                 do
                 {
                     Console.WriteLine("Choose a valid play.");
-                    userChoice = Console.ReadLine().ToUpper();
-                } while (Array.IndexOf(choices, userChoice) == -1);
+                    userChoiceStr = Console.ReadLine();
+                } while (!Enum.TryParse<Choice>(userChoiceStr, true, out userChoice));
 
-                string cpuChoice = choices[n];
+                Choice cpuChoice = (Choice)choices.GetValue(n);
                 Console.WriteLine("CPU:" + cpuChoice);
 
                 string winner = DetermineWinner(userChoice, cpuChoice);
