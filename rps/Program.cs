@@ -6,24 +6,38 @@ using System.Threading.Tasks;
 
 namespace rps
 {
-    enum Choice { ROCK, PAPER, SCISSORS };
+    enum Choice { ROCK, PAPER, SCISSORS }
+
+    enum Outcome { USERWIN, CPUWIN, DRAW }
 
     class Program
     {
-        static string DetermineWinner(Choice userChoice, Choice cpuChoice)
+        static Outcome DetermineOutcome(Choice userChoice, Choice cpuChoice)
         {
             if (userChoice == cpuChoice)
             {
-                return "Draw.";
+                return Outcome.DRAW;
             }
 
             if (userChoice == Choice.ROCK && cpuChoice == Choice.SCISSORS || userChoice == Choice.PAPER && cpuChoice == Choice.ROCK || userChoice == Choice.SCISSORS && cpuChoice == Choice.PAPER)
             {
-                return "You win this round.";
+                return Outcome.USERWIN;
             }
 
-            return "CPU wins this round.";
+            return Outcome.CPUWIN;
+        }
 
+        static string DisplayOutcome(Outcome outcome)
+        {
+            switch (outcome)
+            {
+                case Outcome.USERWIN:
+                    return "You win this round.";
+                case Outcome.CPUWIN:
+                    return "CPU wins this round.";
+                default:
+                    return "Draw.";
+            }
         }
 
         static void Main()
@@ -58,14 +72,14 @@ namespace rps
                 Choice cpuChoice = (Choice)choices.GetValue(n);
                 Console.WriteLine("CPU:" + cpuChoice);
 
-                string winner = DetermineWinner(userChoice, cpuChoice);
-                Console.WriteLine(winner);
+                Outcome winner = DetermineOutcome(userChoice, cpuChoice);
+                Console.WriteLine(DisplayOutcome(winner));
 
-                if (winner == "You win this round.")
+                if (winner == Outcome.USERWIN)
                 {
                     userScore++;
                 }
-                else if (winner == "CPU wins this round.")
+                else if (winner == Outcome.CPUWIN)
                 {
                     cpuScore++;
                 }
