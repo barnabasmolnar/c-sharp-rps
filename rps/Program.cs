@@ -10,6 +10,18 @@ namespace rps
 
     enum Outcome { USERWIN, CPUWIN, DRAW }
 
+    class CPUPlayer
+    {
+        private static readonly Array choices = Enum.GetValues(typeof(Choice));
+        private static readonly Random rnd = new Random();
+
+        public static Choice PickRandom()
+        {
+            int n = rnd.Next(choices.Length);
+            return (Choice)choices.GetValue(n);
+        }
+    }
+
     class Program
     {
         static Outcome DetermineOutcome(Choice userChoice, Choice cpuChoice)
@@ -47,19 +59,10 @@ namespace rps
             int userScore = 0;
             int cpuScore = 0;
 
-            var choices = Enum.GetValues(typeof(Choice));
-
             Console.WriteLine("Let's play a game of Rock Paper Scissors.");
-
-            Random rnd = new Random();
-
 
             while (keepPlaying)
             {
-
-                int n = rnd.Next(choices.Length);
-
-
                 Choice userChoice;
                 string userChoiceStr;
 
@@ -69,7 +72,7 @@ namespace rps
                     userChoiceStr = Console.ReadLine();
                 } while (!Enum.TryParse<Choice>(userChoiceStr, true, out userChoice));
 
-                Choice cpuChoice = (Choice)choices.GetValue(n);
+                Choice cpuChoice = CPUPlayer.PickRandom();
                 Console.WriteLine("CPU:" + cpuChoice);
 
                 Outcome winner = DetermineOutcome(userChoice, cpuChoice);
