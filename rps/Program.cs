@@ -22,6 +22,43 @@ namespace rps
         }
     }
 
+    class HumanPlayer
+    {
+        public static Choice GetChoice()
+        {
+            Choice userChoice;
+            string userChoiceStr;
+
+            do
+            {
+                Console.WriteLine("Choose a valid play.");
+                userChoiceStr = Console.ReadLine();
+            } while (!Enum.TryParse<Choice>(userChoiceStr, true, out userChoice));
+
+            return userChoice;
+        }
+    }
+
+    class Score
+    {
+        private static int userScore = 0;
+        private static int cpuScore = 0;
+
+        public static void UpdateScore(Outcome outcome)
+        {
+            if (outcome == Outcome.USERWIN)
+            {
+                userScore++;
+            }
+            else if (outcome == Outcome.CPUWIN)
+            {
+                cpuScore++;
+            }
+        }
+
+        public static string ReturnScore() => $"User score: {userScore}\nCPU score: {cpuScore}";
+    }
+
     class Program
     {
         static Outcome DetermineOutcome(Choice userChoice, Choice cpuChoice)
@@ -52,25 +89,21 @@ namespace rps
             }
         }
 
+        static bool KeepPlaying()
+        {
+            Console.Write("New game? y/n ");
+            ConsoleKeyInfo cki = Console.ReadKey(); // wait for player to press a key
+            Console.WriteLine("\n------");
+            return cki.KeyChar == 'y'; // continue only if y was pressed
+        }
+
         static void Main()
         {
-            bool keepPlaying = true;
-
-            int userScore = 0;
-            int cpuScore = 0;
-
             Console.WriteLine("Let's play a game of Rock Paper Scissors.");
 
-            while (keepPlaying)
+            do
             {
-                Choice userChoice;
-                string userChoiceStr;
-
-                do
-                {
-                    Console.WriteLine("Choose a valid play.");
-                    userChoiceStr = Console.ReadLine();
-                } while (!Enum.TryParse<Choice>(userChoiceStr, true, out userChoice));
+                Choice userChoice = HumanPlayer.GetChoice();
 
                 Choice cpuChoice = CPUPlayer.PickRandom();
                 Console.WriteLine("CPU:" + cpuChoice);
@@ -78,26 +111,11 @@ namespace rps
                 Outcome winner = DetermineOutcome(userChoice, cpuChoice);
                 Console.WriteLine(DisplayOutcome(winner));
 
-                if (winner == Outcome.USERWIN)
-                {
-                    userScore++;
-                }
-                else if (winner == Outcome.CPUWIN)
-                {
-                    cpuScore++;
-                }
+                Score.UpdateScore(winner);
 
-                Console.Write("New game? y/n ");
-                ConsoleKeyInfo cki = Console.ReadKey(); // wait for player to press a key
-                Console.WriteLine("\n------");
-                keepPlaying = cki.KeyChar == 'y'; // continue only if y was pressed
+            } while (KeepPlaying());
 
-                if (!keepPlaying)
-                {
-                    Console.WriteLine($"User score: {userScore}");
-                    Console.WriteLine($"CPU score: {cpuScore}");
-                }
-            }
+            Console.WriteLine(Score.ReturnScore());           
         }
     }
 }
