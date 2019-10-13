@@ -6,58 +6,11 @@ using System.Threading.Tasks;
 
 namespace rps
 {
+    using static Choice;
+    using static Outcome;
+
     enum Choice { ROCK, PAPER, SCISSORS }
-
     enum Outcome { USERWIN, CPUWIN, DRAW }
-
-    class CPUPlayer
-    {
-        private static readonly Array choices = Enum.GetValues(typeof(Choice));
-        private static readonly Random rnd = new Random();
-
-        public static Choice PickRandom()
-        {
-            int n = rnd.Next(choices.Length);
-            return (Choice)choices.GetValue(n);
-        }
-    }
-
-    class HumanPlayer
-    {
-        public static Choice GetChoice()
-        {
-            Choice userChoice;
-            string userChoiceStr;
-
-            do
-            {
-                Console.WriteLine("Choose a valid play.");
-                userChoiceStr = Console.ReadLine();
-            } while (!Enum.TryParse<Choice>(userChoiceStr, true, out userChoice));
-
-            return userChoice;
-        }
-    }
-
-    class Score
-    {
-        private static int userScore = 0;
-        private static int cpuScore = 0;
-
-        public static void UpdateScore(Outcome outcome)
-        {
-            if (outcome == Outcome.USERWIN)
-            {
-                userScore++;
-            }
-            else if (outcome == Outcome.CPUWIN)
-            {
-                cpuScore++;
-            }
-        }
-
-        public static string ReturnScore() => $"User score: {userScore}\nCPU score: {cpuScore}";
-    }
 
     class Program
     {
@@ -65,24 +18,24 @@ namespace rps
         {
             if (userChoice == cpuChoice)
             {
-                return Outcome.DRAW;
+                return DRAW;
             }
 
-            if (userChoice == Choice.ROCK && cpuChoice == Choice.SCISSORS || userChoice == Choice.PAPER && cpuChoice == Choice.ROCK || userChoice == Choice.SCISSORS && cpuChoice == Choice.PAPER)
+            if (userChoice == ROCK && cpuChoice == SCISSORS || userChoice == PAPER && cpuChoice == ROCK || userChoice == SCISSORS && cpuChoice == PAPER)
             {
-                return Outcome.USERWIN;
+                return USERWIN;
             }
 
-            return Outcome.CPUWIN;
+            return CPUWIN;
         }
 
         static string DisplayOutcome(Outcome outcome)
         {
             switch (outcome)
             {
-                case Outcome.USERWIN:
+                case USERWIN:
                     return "You win this round.";
-                case Outcome.CPUWIN:
+                case CPUWIN:
                     return "CPU wins this round.";
                 default:
                     return "Draw.";
@@ -108,14 +61,14 @@ namespace rps
                 Choice cpuChoice = CPUPlayer.PickRandom();
                 Console.WriteLine("CPU:" + cpuChoice);
 
-                Outcome winner = DetermineOutcome(userChoice, cpuChoice);
-                Console.WriteLine(DisplayOutcome(winner));
+                Outcome outcome = DetermineOutcome(userChoice, cpuChoice);
+                Console.WriteLine(DisplayOutcome(outcome));
 
-                Score.UpdateScore(winner);
+                Score.UpdateScore(outcome);
 
             } while (KeepPlaying());
 
-            Console.WriteLine(Score.ReturnScore());           
+            Console.WriteLine(Score.ReturnScore());
         }
     }
 }
